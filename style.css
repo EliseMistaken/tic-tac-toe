@@ -1,0 +1,22 @@
+body {
+    border-collapse: collapse;
+}
+h1  {
+    text-align: center;
+}
+
+.gameboard {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(50px, 150px) );
+    grid-template-rows: repeat(3, minmax(50px, 150px));
+    justify-content: center;
+}
+
+.row {
+    display: contents;
+}
+
+.square {
+    border: 1px solid black;
+    
+}
