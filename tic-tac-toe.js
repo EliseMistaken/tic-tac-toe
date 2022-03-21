@@ -17,12 +17,12 @@ function gameBoard() {
     // False = no winner, true = winner
     function checkWin() {
         for( let i = 0; i < 9; i += 3){
-            if(board[i] == board[i+1] == board[i+2] && board[i]) return true;
+            if(board[i] === board[i+1] && board[i] === board[i+2] && board[i]) return true;
         }
         for (let i = 0 ; i<3; i++){
-            if(board[i] == board[i+3] == board[i+6] && board[i]) return true;
+            if(board[i] === board[i+3] && board[i] === board[i+6] && board[i]) return true;
         }
-        return (board[0] == board[4] == board[8] && board[0])|| (board[2] == board[4] == board[6] && board[2]);
+        return (board[0] === board[4] && board[4] === board[8] && board[0])|| (board[2] === board[4] && board[4] === board[6] && board[2]);
     }
     
     function checkTie() {
@@ -37,24 +37,93 @@ function gameBoard() {
         return true;
     }
 
+    function reset(){
+        numMoves = 0;
+        for( let i = 0; i < board.length; i++){
+            board[i] = '';
+        }
+    }
+
     return {
+        board,
         move,
         checkTie,
-        checkWin
+        checkWin,
+        reset
     }
 };
 
 function game() {
     //Should set up event listeners, handle game vs AI and pvp. Controller for the model(gameboard). 
-    
+    let ai = false;
     let board = gameBoard();
+    let comp = computerPlayer(board);
+    let playerMarker = 'x'
+    let gameRunning = true;
 
-}
-
-function player() {
+    function init() {
+        Array.from(document.getElementsByClassName('square')).forEach(
+            (square) => square.addEventListener('click', handleClick)
+        );
+        document.getElementById('reset').addEventListener('click', handleReset);
+    }
     
+    function handleClick(e) {
+        if(!gameRunning) return;
+
+        const position = e.target.dataset.id;
+        if(board.move(position, playerMarker)) {
+            e.target.innerText = playerMarker;
+        }
+        
+        if(board.checkWin()) {
+            console.log(document.getElementById('winner'));
+            document.getElementById('winner').innerText = "The winner is " + playerMarker + "!";
+            gameRunning = false;
+            //Stop the game, remove the listeners? or just check if we're in a win state. 
+        }
+        if(board.checkTie()) 
+        {
+            document.getElementById('winner').innerText = "It's a tie!";
+            gameRunning = false;
+        } 
+        changeTurn();
+    }
+
+    function handleReset(e){
+        board.reset();
+        playerMarker = 'x';
+        gameRunning = true;
+        document.getElementById('winner').innerText = '';
+        Array.from(document.getElementsByClassName('square')).forEach(
+            (square) => square.innerText = ''
+        );
+    }
+
+    function changeTurn() {
+        playerMarker == 'x' ?  playerMarker = 'o' : playerMarker = 'x';
+        if(!ai) return
+        comp.getMove();
+        playerMarker == 'x' ?  playerMarker = 'o' : playerMarker = 'x';
+    }
+
     
     return {
-
+        init
     }
 }
+
+function computerPlayer(gameBoard) {
+    let board = gameBoard
+    function getMove() {
+        console.log(board.board);
+        return 
+    }
+    
+    return {
+        getMove
+    }
+}
+
+g = game();
+g.init();
