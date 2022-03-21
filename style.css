@@ -46,3 +46,7 @@ h1  {
     justify-self: center;
 }
 
+#reset {
+    padding: 15px;
+    border-radius: 15px;
+}
